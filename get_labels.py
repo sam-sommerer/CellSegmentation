@@ -28,24 +28,28 @@ annotations = data["annotation"]
 width = data["width"]
 height = data["height"]
 
-first_id = ids[0]
-
+cur_id = ids[0]
 final = np.zeros((520, 704, 3))
 
 for i in range(len(ids)):
-  print(i)
-  if ids[i] != first_id:
-    break
+  if ids[i] != cur_id:
+    mask = (final > 0).astype(np.uint8) * 255
+    cv2.imshow("test", mask)
+    key = cv2.waitKey(0)
+
+    if key == ord("q"):
+      cv2.destroyAllWindows()
+      quit()
+
+    # Reset
+    cur_id = ids[i]
+    final = np.zeros((520, 704, 3))
+
+
   decoded = decodeRLE(annotations[i], types[i], (520, 704, 3))
   final += decoded
 
-mask = (final > 0).astype(np.uint8) * 255
-
-cv2.imshow("test", mask)
-cv2.waitKey(0)
-
 cv2.destroyAllWindows()
-
 
 
 
