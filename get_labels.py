@@ -1,3 +1,4 @@
+import os
 import cv2
 import math
 import numpy as np
@@ -8,6 +9,8 @@ colors_dict = {
     "astro": np.array([0, 255, 0]),
     "cort": np.array([0, 0, 255])
 }
+
+DATA_DIR = "data"
 
 def decodeRLE(encoded, cell_type, im_shape):
   nums = [int(num) for num in encoded.split(" ")]
@@ -33,8 +36,16 @@ final = np.zeros((520, 704, 3))
 
 for i in range(len(ids)):
   if ids[i] != cur_id:
+
+    inp = cv2.imread(os.path.join(DATA_DIR, "train", f"{ids[i-1]}.png"))
     mask = (final > 0).astype(np.uint8) * 255
+    comb = (inp + mask / 2).astype(np.uint8)
+
+    cv2.imshow("test", inp)
+    key = cv2.waitKey(0)
     cv2.imshow("test", mask)
+    key = cv2.waitKey(0)
+    cv2.imshow("test", comb)
     key = cv2.waitKey(0)
 
     if key == ord("q"):
@@ -45,16 +56,7 @@ for i in range(len(ids)):
     cur_id = ids[i]
     final = np.zeros((520, 704, 3))
 
-
   decoded = decodeRLE(annotations[i], types[i], (520, 704, 3))
   final += decoded
 
 cv2.destroyAllWindows()
-
-
-
-
-
-
-
-
