@@ -1,17 +1,33 @@
 import albumentations as A
+import numpy as np
 import cv2
 
 transform = A.Compose([
-    A.RandomCrop(width=256, height=256),
     A.HorizontalFlip(p=0.5),
     A.RandomBrightnessContrast(p=0.2),
 ])
 
-image = cv2.imread("/path/to/image.jpg")
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+imgs_file = "train_X.npy"
+masks_file = "train_y.npy"
+aug_imgs_file = "aug_train_X.npy"
+aug_masks_file = "aug_train_Y.npy"
 
-mask = cv2.imread("/path/to/mask.png")
+def augment(imgs_file, masks_file, transform):
+    imgs = np.load(imgs_file)
+    masks = np.load(masks_file)
 
-transformed = transform(image=image, mask=mask)
-transformed_image = transformed['image']
-transformed_mask = transformed['mask']
+    aug_imgs = []
+    aug_masks = []
+
+    for img, mask in zip(imgs, masks):
+        transformed = transform(image=img, mask=mask)
+        aug_imgs.append(transformed["image"])
+        aug_masks.append(transformed["masks"])
+    
+    return aug_imgs, aug_masks
+
+aug_imgs, aug_masks = augment(imgs_file, masks_file, transform)
+
+np.save(aug_imgs_file, np.asarray(aug_imgs))
+np.save(aug_masks_file, np.asarray(aug_masks))
+
