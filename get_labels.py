@@ -58,7 +58,7 @@ for i in range(len(ids)):
     '''
     print(cur_img)
 
-    # Xs[cur_img] = cv2.imread(os.path.join(DATA_DIR, "train", f"{ids[i-1]}.png"))[:, :, 0]
+    Xs[cur_img] = cv2.imread(os.path.join(DATA_DIR, "train", f"{ids[i-1]}.png"))[:, :, 0]
     ys[cur_img] = (np.sum(final, axis=2) > 0).astype(np.float32)
 
     # Reset
@@ -69,7 +69,10 @@ for i in range(len(ids)):
   decoded = decodeRLE(annotations[i], types[i], (520, 704, 3))
   final += decoded
 
-# np.save("train_X.npy" Xs)
+Xs -= Xs.mean()
+Xs /= Xs.std()
+
+np.save("train_X.npy", Xs)
 np.save("train_y.npy", ys)
 
 
