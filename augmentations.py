@@ -7,14 +7,17 @@ transform = A.Compose([
     A.RandomBrightnessContrast(p=0.2),
 ])
 
-imgs_file = "train_X.npy"
-masks_file = "train_y.npy"
-aug_imgs_file = "aug_train_X.npy"
-aug_masks_file = "aug_train_Y.npy"
+imgs_file = "data/train_X.npy"
+masks_file = "data/train_y.npy"
+aug_imgs_file = "data/aug_train_X.npy"
+aug_masks_file = "data/aug_train_Y.npy"
 
 def augment(imgs_file, masks_file, transform):
     imgs = np.load(imgs_file)
     masks = np.load(masks_file)
+
+    imgs = imgs.astype(np.uint8)
+    masks = masks.astype(np.uint8)
 
     aug_imgs = []
     aug_masks = []
@@ -22,7 +25,7 @@ def augment(imgs_file, masks_file, transform):
     for img, mask in zip(imgs, masks):
         transformed = transform(image=img, mask=mask)
         aug_imgs.append(transformed["image"])
-        aug_masks.append(transformed["masks"])
+        aug_masks.append(transformed["mask"])
     
     return aug_imgs, aug_masks
 

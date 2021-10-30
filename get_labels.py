@@ -69,8 +69,8 @@ for i in range(len(ids)):
   decoded = decodeRLE(annotations[i], types[i], (520, 704, 3))
   final += decoded
 
-Xs -= Xs.mean()
-Xs /= Xs.std()
+# Xs -= Xs.mean()
+# Xs /= Xs.std()
 
 np.save("train_X.npy", Xs)
 np.save("train_y.npy", ys)
