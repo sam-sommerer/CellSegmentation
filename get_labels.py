@@ -23,7 +23,7 @@ def decodeRLE(encoded, cell_type, im_shape):
     chunk[pos_init:pos_init + n, :] = colors_dict[cell_type]
   return chunk.reshape(im_shape)   
 
-data = pd.read_csv("data/train.csv")
+data = pd.read_csv(os.path.join(DATA_DIR, "train.csv"))
 
 ids = data["id"]
 types = data["cell_type"]
