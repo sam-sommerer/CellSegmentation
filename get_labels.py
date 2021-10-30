@@ -32,11 +32,15 @@ width = data["width"]
 height = data["height"]
 
 cur_id = ids[0]
+cur_img = 0
+Xs = np.zeros((ids.nunique(), 520, 704))
+ys = np.zeros((ids.nunique(), 520, 704))
 final = np.zeros((520, 704, 3))
 
 for i in range(len(ids)):
   if ids[i] != cur_id:
-
+    '''
+    # Visualization:
     inp = cv2.imread(os.path.join(DATA_DIR, "train", f"{ids[i-1]}.png"))
     mask = (final > 0).astype(np.uint8) * 255
     comb = (inp + mask / 2).astype(np.uint8)
@@ -51,12 +55,21 @@ for i in range(len(ids)):
     if key == ord("q"):
       cv2.destroyAllWindows()
       quit()
+    '''
+    print(cur_img)
+
+    # Xs[cur_img] = cv2.imread(os.path.join(DATA_DIR, "train", f"{ids[i-1]}.png"))[:, :, 0]
+    ys[cur_img] = (np.sum(final, axis=2) > 0).astype(np.float32)
 
     # Reset
     cur_id = ids[i]
+    cur_img += 1
     final = np.zeros((520, 704, 3))
 
   decoded = decodeRLE(annotations[i], types[i], (520, 704, 3))
   final += decoded
 
-cv2.destroyAllWindows()
+# np.save("train_X.npy" Xs)
+np.save("train_y.npy", ys)
+
+
