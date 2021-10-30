@@ -131,3 +131,4 @@ dmypy.json
 # Additional
 data
 .DS_Store
+*.swp
